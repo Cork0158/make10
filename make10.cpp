@@ -105,7 +105,7 @@ int main() {
     }
 
     // 該当なし
-    if(!check) cout << "Not found" << endl;
+    if(!check) cout << "Not Found" << endl;
 
     return 0;
 }
