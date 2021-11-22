@@ -52,7 +52,8 @@ int main() {
     vector<double> input(4);
 
     // 入力を受け取る
-    cout << "4つの数（0〜9）をスペースありで入力してください．（例：1 2 3 4）" << endl;
+    cout << "4つの数（0〜9）をスペースありで入力してください．（例：1 2 3 4）"
+         << endl;
     cin >> input[0] >> input[1] >> input[2] >> input[3];
     cout << endl;
 
@@ -71,30 +72,78 @@ int main() {
                 for (int op3 = 0; op3 < 4; op3++) {
                     double ans = 0;
 
-                    // patern1[n1 op1 n2) op2 n3) op3 n4]
-                    ans += cal(input[0], input[1], op1);
+                    // pattern1[((n1 op1 n2) op2 n3) op3 n4]
+                    ans = cal(input[0], input[1], op1);
                     ans = cal(ans, input[2], op2);
                     ans = cal(ans, input[3], op3);
                     // 正解があれば出力
                     if (ans == 10) {
-                        cout << "((" << input[0] << change(op1) << input[1] << ")";
+                        cout << "((" << input[0] << change(op1) << input[1]
+                             << ")";
                         cout << change(op2) << input[2] << ")";
                         cout << change(op3) << input[3] << endl;
                         check = true;
                     }
-                    
 
-                    // patern2[(n1 op1 n2) op2 (n3 op3 n4)]
+                    // pattern2[(n1 op1 n2) op2 (n3 op3 n4)]
                     double temp1 = 0, temp2 = 0;
-                    temp1 += cal(input[0], input[1], op1);
-                    temp2 += cal(input[2], input[3], op3);
+                    temp1 = cal(input[0], input[1], op1);
+                    temp2 = cal(input[2], input[3], op3);
                     ans = cal(temp1, temp2, op2);
                     // 正解があれば出力
                     if (ans == 10) {
                         cout << "(" << input[0] << change(op1) << input[1] << ")";
                         cout << change(op2);
-                        cout << "(" << input[2] << change(op3) << input[3] << ")" << endl;;
+                        cout << "(" << input[2] << change(op3) << input[3] << ")" << endl;
+                        ;
                         check = true;
+                    }
+
+                    // pattern3[割り算の例外処理]
+                    //double temp1 = 0, temp2 = 0;
+                    if (op1 == 3 || op2 == 3 || op3 == 3) {
+                        // n4 op3 (n3 op2 (n1 op1 n2))
+                        ans = cal(input[0], input[1], op1);
+                        ans = cal(input[2], ans, op2);
+                        ans = cal(input[3], ans, op3);
+
+                        // 正解があれば出力
+                        if (ans == 10) {
+                            cout << input[3] << change(op3);
+                            cout << "(" << input[2] << change(op2);
+                            cout << "(" << input[0] << change(op1) << input[1] << "))" << endl;
+                            check = true;
+                        }
+                    } else if (op1 == 3 || op2 == 3) {
+                        // (n3 op2 (n1 op1 n2)) op3 n4
+                        ans = cal(input[0], input[1], op1);
+                        ans = cal(input[2], ans, op2);
+                        ans = cal(ans, input[3], op3);
+
+                        // 正解があれば出力
+                        if (ans == 10) {
+                            cout << "(" << input[2] << change(op2);
+                            cout << "(" << input[0] << change(op1) << input[1]
+                                 << "))";
+                            cout << change(op3) << input[3] << endl;
+                            check = true;
+                        }
+                    } else if (op1 == 3 || op3 == 3) {
+                        // n4 op3 ((n1 op1 n2) op2 n3)
+                        ans = cal(input[0], input[1], op1);
+                        ans = cal(ans, input[2], op2);
+                        ans = cal(input[3], ans, op3);
+
+                        // 正解があれば出力
+                        if (ans == 10) {
+                            cout << input[3] << change(op3) << endl;
+                            cout << "((" << input[0] << change(op1) << input[1]
+                                 << ")";
+                            cout << change(op2) << input[2] << ")" << endl;
+                            check = true;
+                        }
+                    } else {
+                        continue;
                     }
                 }
             }
@@ -105,7 +154,7 @@ int main() {
     }
 
     // 該当なし
-    if(!check) cout << "Not Found" << endl;
+    if (!check) cout << "Not Found" << endl;
 
     return 0;
 }

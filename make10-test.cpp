@@ -97,6 +97,57 @@ int main() {
                             check = true;
                             break;
                         }
+
+                        // pattern3[割り算の例外処理]
+                        // double temp1 = 0, temp2 = 0;
+                        if (op1 == 3 || op2 == 3 || op3 == 3) {
+                            // n4 op3 (n3 op2 (n1 op1 n2))
+                            ans += cal(input[0], input[1], op1);
+                            ans = cal(input[2], ans, op2);
+                            ans = cal(input[3], ans, op3);
+
+                            // 正解があれば出力
+                            if (ans == 10) {
+                                cout << input[3] << change(op3);
+                                cout << "(" << input[2] << change(op2);
+                                cout << "(" << input[0] << change(op1)
+                                     << input[1] << "))" << endl;
+                                check = true;
+                                break;
+                            }
+                        } else if (op1 == 3 || op2 == 3) {
+                            // (n3 op2 (n1 op1 n2)) op3 n4
+                            ans += cal(input[0], input[1], op1);
+                            ans = cal(input[2], ans, op2);
+                            ans = cal(ans, input[3], op3);
+
+                            // 正解があれば出力
+                            if (ans == 10) {
+                                cout << "(" << input[2] << change(op2);
+                                cout << "(" << input[0] << change(op1)
+                                     << input[1] << "))";
+                                cout << change(op3) << input[3] << endl;
+                                check = true;
+                                break;
+                            }
+                        } else if (op1 == 3 || op3 == 3) {
+                            // n4 op3 ((n1 op1 n2) op2 n3)
+                            ans += cal(input[0], input[1], op1);
+                            ans = cal(ans, input[2], op2);
+                            ans = cal(input[3], ans, op3);
+
+                            // 正解があれば出力
+                            if (ans == 10) {
+                                cout << input[3] << change(op3) << endl;
+                                cout << "((" << input[0] << change(op1)
+                                     << input[1] << ")";
+                                cout << change(op2) << input[2] << ")" << endl;
+                                check = true;
+                                break;
+                            }
+                        } else {
+                            continue;
+                        }
                     }
                     if(check) break;
                 }
